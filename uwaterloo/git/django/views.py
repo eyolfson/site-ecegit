@@ -6,7 +6,7 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
 
-from uwaterloo.django.ssh.forms import KeyForm
+from eyl.django.ssh.forms import KeyForm
 
 def home(request):
     return render(request, 'home.html')
