@@ -76,3 +76,7 @@ AUTHENTICATION_BACKENDS = (
 )
 MIDDLEWARE_CLASSES += ('uwaterloo.django.cas.middleware.CASMiddleware',)
 CAS_SERVER_URL = 'https://cas.uwaterloo.ca/cas/'
+
+FILE_UPLOAD_HANDLERS = (
+    'django.core.files.uploadhandler.TemporaryFileUploadHandler',
+)
