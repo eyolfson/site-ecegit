@@ -21,16 +21,13 @@ class Command(NoArgsCommand):
         if not 'GL_REPO' in os.environ:
             raise CommandError('Environment variable GL_REPO not set.')
         path = os.environ['GL_REPO']
-        # repo = Repo.objects.get(path=path)
+        repo = Repo.objects.get_or_create(path)[0]
 
         if not 'GL_USER' in os.environ:
             raise CommandError('Environment variable GL_USER not set.')
-
         username = os.environ['GL_USER']
-        # user = get_user_model().objects.get(username=username)
+        user = get_user_model().objects.get(username=username)[0]
 
-        print(' '.join([path, username]))
-
-        # old_rev, new_rev, refname = sys.stdin.read().split()
-        # push = Push.objects.create(repo=repo, user=user, old_rev=old_rev,
-        #                            new_rev=new_rev, refname=refname)
+        old_rev, new_rev, refname = sys.stdin.read().split()
+        push = Push.objects.create(repo=repo, user=user, old_rev=old_rev,
+                                   new_rev=new_rev, refname=refname)

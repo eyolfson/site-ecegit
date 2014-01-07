@@ -15,25 +15,35 @@ class Command(BaseCommand):
     help = 'Handles gitolite triggers'
 
     def handle(self, name, *args, **options):
-        if not len(args) in (0, 1, 3):
-            raise CommandError('Invalid number of arguments.')
-        if len(args) == 1:
-            path, = args
-        if len(args) == 3:
-            path, username, operation = args
-
         if name == 'POST_COMPILE':
-            output = check_output(['gitolite', 'list-phy-repos'],
-                                  stderr=DEVNULL)
-            repo_paths = [x.decode('utf-8') for x in output.splitlines()]
-            for path in repo_paths:
-                repo, created = Repo.objects.get_or_create(path)
-                # Ensure the repo is synced with gitolite
-                if not created:
-                    repo.sync()
-                    repo.save()
-                Access.objects.filter(repo=repo).delete()
-                for user in get_user_model().objects.all():
-                    if not call(['gitolite', 'access', '-q', path,
-                                 user.username, 'R']):
-                        Access.objects.create(repo=repo, user=user)
+            if len(args) != 0:
+                raise CommandError('Invalid number of arguments for POST_COMPILE.')
+            self.post_compile()
+        elif name == 'POST_CREATE':
+            if not len(args) in (1, 3):
+                raise CommandError('Invalid number of arguments for POST_CREATE.')
+            if len(args) == 1:
+                # This is just a normal create, it'll be handled by POST_COMPILE
+                return
+            self.post_create(*args)
+
+    def sync(self, path):
+        repo, created = Repo.objects.get_or_create(path)
+        # Ensure the repo is synced with gitolite
+        if not created:
+            repo.sync()
+            repo.save()
+        Access.objects.filter(repo=repo).delete()
+        for user in get_user_model().objects.all():
+            username = user.username
+            if not call(['gitolite', 'access', '-q', path, username, 'R']):
+                Access.objects.create(repo=repo, user=user)
+
+    def post_compile(self):
+        output = check_output(['gitolite', 'list-phy-repos'], stderr=DEVNULL)
+        repo_paths = [x.decode('utf-8') for x in output.splitlines()]
+        for path in repo_paths:
+            self.sync(path)
+
+    def post_create(self, path, username, operation):
+        self.sync(path)
