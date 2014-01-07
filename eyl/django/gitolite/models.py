@@ -72,7 +72,7 @@ class Access(models.Model):
 
     class Meta:
         unique_together = ('user', 'repo')
-        ordering = ['repo']
+        ordering = ['repo', 'user']
 
 def get_key_abspath(key):
     keydir = os.path.join(os.environ['HOME'], '.gitolite', 'keydir')
