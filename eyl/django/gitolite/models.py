@@ -53,7 +53,10 @@ class Repo(models.Model):
                 d = f.read().strip()
                 self.forked_from = Repo.objects.get_or_create(d)[0]
         except IOError:
-            pass        
+            pass
+
+    class Meta:
+        ordering = ['path']
 
 class Push(models.Model):
     repo = models.ForeignKey(Repo, related_name='pushes')
