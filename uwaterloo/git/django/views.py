@@ -7,6 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
 
 from eyl.django.ssh.forms import KeyForm
+from eyl.django.ssh.models import Key
 
 def home(request):
     return render(request, 'home.html')
@@ -14,9 +15,20 @@ def home(request):
 @login_required
 def profile(request):
     if request.method == 'POST':
-        form = KeyForm(request.POST, request.FILES)
-        if form.is_valid():
+        key_form = KeyForm(request.user, request.POST, request.FILES)
+        if key_form.is_valid():
+            key_form.create()
             return redirect('profile')
     else:
-        form = KeyForm()
-    return render(request, 'profile.html', {'form': form})
+        key_form = KeyForm(request.user)
+    keys = Key.objects.filter(user=request.user)
+    return render(request, 'profile.html', {'keys': keys, 'key_form': key_form})
+
+@login_required
+def profile_remove(request, key_id):
+    try:
+        key = Key.objects.get(pk=key_id, user=request.user)
+        key.delete()
+    except Key.DoesNotExist:
+        pass
+    return redirect('profile')

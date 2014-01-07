@@ -9,6 +9,6 @@ from django.db import models
 class Key(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='ssh_keys',
                              db_index=True)
-    data = models.TextField()
+    data = models.TextField(db_index=True, unique=True)
     comment = models.TextField()
     fingerprint = models.CharField(max_length=47)
