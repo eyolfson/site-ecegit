@@ -8,6 +8,9 @@ import os
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.db import models
+from django.db.models.signals import post_save, pre_delete
+
+from eyl.django.ssh.models import Key
 
 class RepoManager(models.Manager):
 
@@ -66,3 +69,34 @@ class Access(models.Model):
 
     class Meta:
         unique_together = ('user', 'repo')
+
+def get_key_abspath(key):
+    keydir = os.path.join(os.environ['HOME'], '.gitolite', 'keydir')
+    filename = '{}@django-{}.pub'.format(key.user.username, key.pk)
+    return os.path.join(keydir, filename)
+
+def ssh_authkeys():
+    from subprocess import call, DEVNULL
+    call(['gitolite', 'trigger', 'SSH_AUTHKEYS'], stdout=DEVNULL,
+         stderr=DEVNULL)
+
+def add_key(sender, instance, **kwargs):
+    abspath = get_key_abspath(instance)
+    try:
+        with open(abspath, 'w') as f:
+            f.write(instance.data)
+            f.write('\n')
+    except:
+        pass
+    ssh_authkeys()
+
+def remove_key(sender, instance, **kwargs):
+    abspath = get_key_abspath(instance)
+    try:
+        os.remove(abspath)
+    except:
+        pass
+    ssh_authkeys()
+
+post_save.connect(add_key, Key)
+pre_delete.connect(remove_key, Key)
