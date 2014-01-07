@@ -26,7 +26,7 @@ class Command(NoArgsCommand):
         if not 'GL_USER' in os.environ:
             raise CommandError('Environment variable GL_USER not set.')
         username = os.environ['GL_USER']
-        user = get_user_model().objects.get(username=username)[0]
+        user = get_user_model().objects.get_or_create(username=username)[0]
 
         old_rev, new_rev, refname = sys.stdin.read().split()
         push = Push.objects.create(repo=repo, user=user, old_rev=old_rev,
