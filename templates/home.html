@@ -1,5 +1,29 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>Home</h1>
+<h1>Git</h1>
+
+<p>This is a Git server at the University of Waterloo.</p>
+
+{% if accesses %}
+<h2>Accesses</h2>
+
+<div class="table-responsive">
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th>Path</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for access in accesses %}
+      <tr>
+        <td>{{ access.repo }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endif %}
+
 {% endblock %}

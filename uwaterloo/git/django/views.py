@@ -6,11 +6,15 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
 
+from eyl.django.gitolite.models import Access
 from eyl.django.ssh.forms import KeyForm
 from eyl.django.ssh.models import Key
 
 def home(request):
-    return render(request, 'home.html')
+    context = {'accesses': []}
+    if request.user.is_authenticated():
+        context['accesses'] = Access.objects.filter(user=request.user)
+    return render(request, 'home.html', context)
 
 @login_required
 def profile(request):

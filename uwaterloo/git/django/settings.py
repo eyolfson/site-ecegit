@@ -23,6 +23,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'eyl.django.gitolite',
     'eyl.django.ssh',
 )
 MIDDLEWARE_CLASSES = (
@@ -81,3 +82,6 @@ CAS_SERVER_URL = 'https://cas.uwaterloo.ca/cas/'
 FILE_UPLOAD_HANDLERS = (
     'django.core.files.uploadhandler.TemporaryFileUploadHandler',
 )
+
+# Gitolite
+REPOSITORIES_DIR = (os.path.join(BASE_DIR, 'repositories'),)
