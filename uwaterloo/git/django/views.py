@@ -16,6 +16,9 @@ def home(request):
         context['accesses'] = Access.objects.filter(user=request.user)
     return render(request, 'home.html', context)
 
+def setup(request):
+    return render(request, 'setup.html')
+
 @login_required
 def profile(request):
     if request.method == 'POST':

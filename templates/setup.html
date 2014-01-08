@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+
+{% block title %}Setup{% endblock %}
+
+{% block nav-setup %} class="active"{% endblock %}
+
+{% block content %}
+<h1>Setup</h1>
+
+<h2>Installing Git</h2>
+
+<p>Download the latest version of Git from <a href="http://git-scm.com/downloads/">official Git website</a>
+or your package manager of choice.</p>
+
+<div class="alert alert-info">
+ The free git book, <a href="http://git-scm.com/book/">Pro Git</a>, is an
+ excellent resource on how to use and understand Git.
+</div>
+
+<div class="alert alert-warning">
+  <strong>Windows Users.</strong> During installation select the following options: for
+  <strong>Adjusting your PATH environment</strong> select <strong>Use Git Bash only</strong>, and for
+  <strong>Configuring the line ending conversions</strong> select <strong>Checkout Windows-style, commit Unix-style line endings</strong>.
+</div>
+
+<h2>Our Environment</h2>
+
+<div class="alert alert-info">
+  All other sections assume you are using this environment.
+</div>
+
+<div class="alert alert-warning">
+  <strong>Linux Users.</strong> Ensure <strong>openssh</strong> is installed.
+</div>
+
+<p>We will be using <strong>Git</strong> on the command line as it's the most flexible and powerful interface.
+If you are using Windows, open <strong>Git Bash</strong> (under <strong>Git</strong> in the
+<strong>Start Menu</strong>). On a Mac, navigate to <strong>Applications</strong> then
+<strong>Utilities</strong> and open <strong>Terminal</strong>. Otherwise on Linux, open the
+terminal emulator of your choice.</p>
+
+<h2>Configuring Git</h2>
+
+<h3>Identifying Yourself</h3>
+
+<p>First, we need to set our name and e-mail address. Your commits display this
+information in the author and committer fields, so make sure you set them
+properly. Use the following commands replacing <code>FIRSTNAME</code>, <code>LASTNAME</code>,
+and <code>USERNAME</code> with relevant values:</p>
+
+<pre>$ git config --global user.name "FIRSTNAME LASTNAME"
+$ git config --global user.email "USERNAME@uwaterloo.ca"</pre>
+
+<h3>Useful Settings</h3>
+
+<p>These settings are recommended:</p>
+
+<ul>
+  <li><code>$ git config --global push.default simple</code> for <code>$ git push</code> to behave as expected</li>
+  <li><code>$ git config --global color.ui "true"</code> for colourful output</li>
+  <li>
+    <code>$ git config --global alias.lol "log --pretty=oneline --abbrev-commit --graph --decorate"</code>
+    later you can use <code>$ git lol</code> to display commit history graphically
+  </li>
+</ul>
+
+<h2>Configuring SSH</h2>
+
+<h3>Generating Key</h3>
+
+<p>Type the following command into the terminal (replacing <code>USERNAME</code>
+with your username):</p>
+
+<pre>$ ssh-keygen -t rsa -C "USERNAME@uwaterloo.ca"</pre>
+
+<p>When prompted, follow these steps:</p>
+
+<ul>
+  <li>
+    <code>Enter file in which to save the key (...):</code> hit
+    <strong>Enter</strong>, the default is recommended
+  </li>
+  <li>
+    <code>Enter passphrase (empty for no passphrase):</code> we <strong>strongly recommend</strong> you type a
+    secure password here (don't worry you can set it up so you don't have to enter it everytime) and hit
+    <strong>Enter</strong>
+  </li>
+  <li>
+    <code>Enter same passphrase again:</code> re-enter your password and hit <strong>Enter</strong>
+  </li>
+</ul>
+
+<h3>Registering Key</h3>
+
+<p>The following steps are required for the server to verify your identity:</p>
+
+<ul>
+  <li>
+    Login to this website. Click on <strong>Login</strong> <em>on this site</em>
+    (there's a navbar at the top of the site, it's to the right and may be
+    collapsed).
+  </li> 
+  <li>Click on <strong>Profile</strong>.</li>
+  <li>
+    Under <strong>SSH Keys</strong> you should see
+    <strong>Add public key</strong>. Click <strong>Browse</strong>.
+  </li>
+  <li>
+    Select <code>~/.ssh/id_rsa.pub</code> and upload the file (on Windows
+    replace <code>~</code> with <code>C:\Users\Username</code>, the
+    <code>.ssh</code> folder may be hidden).
+  </li>
+  <li>Click <strong>Submit</strong></li>
+</ul>
+
+<h3>Verifying Your Key</h3>
+
+<p>Before going further make sure that the server knows who you are. Type the
+following command and enter your <strong>passphrase</strong>:</p>
+
+<pre>$ ssh -T git@laforge.cs.uwaterloo.ca
+Enter passphrase for key '...': 
+hello USERNAME, this is git@laforge.cs.uwaterloo.ca running gitolite3 3.5.3.1 on git 1.8.5.2</pre>
+
+<p>If you see this, <strong>congratulations</strong>! You're ready to use this server.</p>
+{% endblock %}

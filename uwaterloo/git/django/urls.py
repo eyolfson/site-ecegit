@@ -7,6 +7,7 @@ from django.conf.urls import patterns, include, url
 
 urlpatterns = patterns('',
     url(r'^$', 'uwaterloo.git.django.views.home', name='home'),
+    url(r'^setup/$', 'uwaterloo.git.django.views.setup', name='setup'),
     url(r'^profile/$', 'uwaterloo.git.django.views.profile', name='profile'),
     url(r'^profile/(?P<key_id>\d+)/$',
         'uwaterloo.git.django.views.profile_remove', name='profile_remove'),
