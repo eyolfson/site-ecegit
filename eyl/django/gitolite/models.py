@@ -109,7 +109,7 @@ def add_key(sender, instance, **kwargs):
     except:
         pass
     if is_ece459_key(instance):
-        abspath = get_gitolite_path(instance)
+        abspath = get_ece459_1_path(instance)
         try:
             with open(abspath, 'w') as f:
                 f.write(instance.data)
