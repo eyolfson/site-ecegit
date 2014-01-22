@@ -74,10 +74,26 @@ class Access(models.Model):
         unique_together = ('user', 'repo')
         ordering = ['repo', 'user']
 
-def get_key_abspath(key):
-    keydir = os.path.join(os.environ['HOME'], '.gitolite', 'keydir')
+def get_filename(key):
     filename = '{}@django-{}.pub'.format(key.user.username, key.pk)
-    return os.path.join(keydir, filename)
+    return filename
+
+def get_gitolite_path(key):
+    keydir = os.path.join(os.environ['HOME'], '.gitolite', 'keydir')
+    return os.path.join(keydir, get_filename(key))
+
+def get_ece459_1_path(key):
+    keydir = os.path.join(os.environ['HOME'], 'ece459-1-keydir')
+    return os.path.join(keydir, get_filename(key))
+
+def is_ece459_key(key):
+    from subprocess import check_output, DEVNULL
+    o = check_output(['gitolite', 'list-memberships', '-u', key.user.username],
+                     stderr=DEVNULL)
+    for l in o.splitlines():
+        if l == b'@ece459-1141-students':
+            return True
+    return False
 
 def ssh_authkeys():
     from subprocess import call, DEVNULL
@@ -85,21 +101,35 @@ def ssh_authkeys():
          stderr=DEVNULL)
 
 def add_key(sender, instance, **kwargs):
-    abspath = get_key_abspath(instance)
+    abspath = get_gitolite_path(instance)
     try:
         with open(abspath, 'w') as f:
             f.write(instance.data)
             f.write('\n')
     except:
         pass
+    if is_ece459_key(key):
+        abspath = get_gitolite_path(instance)
+        try:
+            with open(abspath, 'w') as f:
+                f.write(instance.data)
+                f.write('\n')
+        except:
+            pass
     ssh_authkeys()
 
 def remove_key(sender, instance, **kwargs):
-    abspath = get_key_abspath(instance)
+    abspath = get_gitolite_path(instance)
     try:
         os.remove(abspath)
     except:
         pass
+    if is_ece459_key(key):
+        abspath = get_ece459_1_path(instance)
+        try:
+            os.remove(abspath)
+        except:
+            pass
     ssh_authkeys()
 
 post_save.connect(add_key, Key)
