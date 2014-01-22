@@ -55,7 +55,7 @@ class Command(BaseCommand):
             for line in out.splitlines():
                 path, username, ret = line.strip().split('\t')
                 user = get_user_model().objects.get(username=username)
-                if not ret.startswith('DENIED'):
+                if not ret.endswith('DENIED by fallthru'):
                     access_list.append(Access(repo=repo, user=user))
                 if len(access_list) > 100:
                     Access.objects.bulk_create(access_list)
