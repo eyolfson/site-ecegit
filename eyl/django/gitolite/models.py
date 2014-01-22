@@ -108,7 +108,7 @@ def add_key(sender, instance, **kwargs):
             f.write('\n')
     except:
         pass
-    if is_ece459_key(key):
+    if is_ece459_key(instance):
         abspath = get_gitolite_path(instance)
         try:
             with open(abspath, 'w') as f:
@@ -124,7 +124,7 @@ def remove_key(sender, instance, **kwargs):
         os.remove(abspath)
     except:
         pass
-    if is_ece459_key(key):
+    if is_ece459_key(instance):
         abspath = get_ece459_1_path(instance)
         try:
             os.remove(abspath)
