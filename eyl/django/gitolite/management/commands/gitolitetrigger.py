@@ -12,6 +12,9 @@ from django.core.management.base import BaseCommand, CommandError
 
 from eyl.django.gitolite.models import Access, Push, Repo
 
+def get_user_list():
+    return list(get_user_model().objects.all())
+
 class Command(BaseCommand):
     args = '<name [path [username operation]]>'
     help = 'Handles gitolite triggers'
@@ -29,7 +32,8 @@ class Command(BaseCommand):
                 return
             self.post_create(*args)
 
-    def sync(self, path, user_list=list(get_user_model().objects.all())):
+
+    def sync(self, path, user_list=get_user_list()):
         repo, created = Repo.objects.get_or_create(path)
         # Ensure the repo is synced with gitolite
         if not created:
@@ -39,17 +43,18 @@ class Command(BaseCommand):
         with Popen(['gitolite', 'access', repo.path, '%', 'R', 'any'],
                    stdin=PIPE, stdout=PIPE, stderr=DEVNULL,
                    universal_newlines=True) as p:
+
             buf = io.StringIO()
             for user in user_list:
                 buf.write(user.username)
                 buf.write('\n')
             out, err = p.communicate(buf.getvalue())
             buf.close()
+
             access_list = []
-            user_iter = user_list.__iter__()
             for line in out.splitlines():
-                ret = line.strip().split('\t')[2]
-                user = next(user_iter)
+                path, username, ret = line.strip().split('\t')
+                user = get_user_model().objects.get(username=username)
                 if not ret.startswith('DENIED'):
                     access_list.append(Access(repo=repo, user=user))
                 if len(access_list) > 100:
@@ -62,7 +67,7 @@ class Command(BaseCommand):
         output = check_output(['gitolite', 'list-phy-repos'], stderr=DEVNULL,
                               universal_newlines=True)
         repo_paths = output.splitlines()
-        user_list = list(get_user_model().objects.all())
+        user_list = get_user_list()
         for path in repo_paths:
             self.sync(path, user_list)
 
