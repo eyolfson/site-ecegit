@@ -4,7 +4,7 @@
 # this program. If not, see <http://www.gnu.org/licenses/>.
 
 """
-WSGI config for uwaterloo-git-site project.
+WSGI config for site-ecegit project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
@@ -13,7 +13,7 @@ https://docs.djangoproject.com/en/1.6/howto/deployment/wsgi/
 """
 
 import os
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "uwaterloo.git.django.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "ecegit.settings")
 
 from django.core.wsgi import get_wsgi_application
 application = get_wsgi_application()

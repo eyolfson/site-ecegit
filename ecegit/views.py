@@ -6,9 +6,9 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
 
-from eyl.django.gitolite.models import Access
-from eyl.django.ssh.forms import KeyForm
-from eyl.django.ssh.models import Key
+from django_gitolite.models import Access
+from django_ssh.forms import KeyForm
+from django_ssh.models import Key
 
 def home(request):
     context = {'accesses': []}

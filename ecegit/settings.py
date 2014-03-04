@@ -4,7 +4,7 @@
 # this program. If not, see <http://www.gnu.org/licenses/>.
 
 """
-Django settings for uwaterloo-git-site project.
+Django settings for site-ecegit project.
 
 For more information on this file, see
 https://docs.djangoproject.com/en/1.6/topics/settings/
@@ -14,8 +14,8 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 """
 
 import os
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(
-    __file__))))
+
+BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 INSTALLED_APPS = (
     'django.contrib.auth',
@@ -23,8 +23,9 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'eyl.django.gitolite',
-    'eyl.django.ssh',
+    'django_gitolite',
+    'django_ssh',
+    'ece459',
 )
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -34,8 +35,8 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
-ROOT_URLCONF = 'uwaterloo.git.django.urls'
-WSGI_APPLICATION = 'uwaterloo.git.django.wsgi.application'
+ROOT_URLCONF = 'ecegit.urls'
+WSGI_APPLICATION = 'ecegit.wsgi.application'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
@@ -74,9 +75,9 @@ LOGIN_REDIRECT_URL = '/'
 
 # CAS
 AUTHENTICATION_BACKENDS = (
-    'uwaterloo.django.cas.backends.CASBackend',
+    'django_cas.backends.CASBackend',
 )
-MIDDLEWARE_CLASSES += ('uwaterloo.django.cas.middleware.CASMiddleware',)
+MIDDLEWARE_CLASSES += ('django_cas.middleware.CASMiddleware',)
 CAS_SERVER_URL = 'https://cas.uwaterloo.ca/cas/'
 
 FILE_UPLOAD_HANDLERS = (
@@ -84,4 +85,4 @@ FILE_UPLOAD_HANDLERS = (
 )
 
 # Gitolite
-REPOSITORIES_DIR = (os.path.join(BASE_DIR, 'repositories'),)
+GITOLITE_USER = 'git'

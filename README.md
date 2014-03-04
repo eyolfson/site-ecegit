@@ -1,21 +1,6 @@
-# University of Waterloo Git Site
+# ECE Git Site
 
-This site is based off the Django framework using Python 3.
-
-## Gitolite
-
-1. Add `LOCAL_CODE => "$rc{GL_ADMIN_BASE}/local",` to the rc file.
-2. Add `POST_COMPILE => ['django'],` to the rc file.
-3. Add `POST_CREATE => ['django'],` to the rc file.
-4. Add `SSH_AUTHKEYS => ['post-compile/ssh-authkeys'],` to the rc file.
-5. Add `local/triggers/django`, it should call the `gitolitetrigger` command.
-6. Add `local/hooks/common/post_receive`, it should call the `gitolitehook`
-   command.
-
-Below is an example script to call the `gitolitetrigger` command.
-
-    #!/bin/bash
-    python /srv/git/site/manage.py gitolitetrigger $@
+A university site for code and course management built on the Django framework
 
 ## CAS
 
