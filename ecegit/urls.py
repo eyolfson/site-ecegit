@@ -13,4 +13,5 @@ urlpatterns = patterns('',
         name='profile_remove'),
     url(r'^login/$', 'django_cas.views.login', name='login'),
     url(r'^logout/$', 'django_cas.views.logout', name='logout'),
+    url(r'^ece459/', include('ece459.urls', namespace="ece459")),
 )

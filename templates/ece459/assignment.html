@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% if is_student %}
+  {% if not group %}
+<h1>Register Group</h1>
+
+{% if register_error %}
+<div class="alert alert-danger">{{ register_error }}</div>
+{% endif %}
+
+<p>
+  <form class="form-inline" role="form" action="{% url 'ece459:assignment' 'a3' %}" method="post">
+    {% csrf_token %}
+    <div class="form-group">
+      <label class="sr-only" for="username">Username</label>
+      <input type="text" class="form-control" name="username" placeholder="Username">
+    </div>
+    <button class="btn btn-default" type="submit" name="partner">Partner</button>
+  </form>
+</p>
+<hr />
+<p>
+  <form role="form" action="{% url 'ece459:assignment' 'a3' %}" method="post" name="solo">
+    {% csrf_token %}
+    <button class="btn btn-default" type="submit" name="solo">Solo</button>
+  </form>
+</p>
+  {% else %}
+<h1>Group</h1>
+
+<dl class="dl-horizontal">
+  <dt>ID</dt>
+  <dd>{{ group.pk }}</dd>
+  <dt>Repository</dt>
+  <dd>{{ group.repo }}</dd>
+</dl>
+  {% endif %}
+{% endif %}
+
+{% endblock %}

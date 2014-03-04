@@ -6,13 +6,27 @@ from django_gitolite.utils import home_dir
 
 logger = logging.getLogger('ece459')
 
-def is_ece459_key(key):
-    command = ['gitolite', 'list-memberships', '-u', key.user.username]
-    o = subprocess.check_output(command, stderr=subprocess.DEVNULL)
+def gitolite_creator_call(command):
+    try:
+        subprocess.check_call('GL_USER=p23lam gitolite ' + command,
+                              shell=True,
+                              stdout=subprocess.DEVNULL,
+                              stderr=subprocess.STDOUT)
+    except subprocess.CalledProcessError as e:
+        msg = "command '{}' returned {}"
+        logger.error(msg.format(e.cmd, e.returncode))
+
+def is_ece459_student(username):
+    command = ['gitolite', 'list-memberships', '-u', username]
+    o = subprocess.check_output(command, stderr=subprocess.DEVNULL,
+                                universal_newlines=True)
     for l in o.splitlines():
-        if l == b'@ece459-1141-students':
+        if l == '@ece459-1141-students':
             return True
     return False
+
+def is_ece459_key(key):
+    return is_ece459_student(key.user.username)
 
 def key_abspath(key):
     filename = '{}@django-{}.pub'.format(key.user.username, key.pk)
