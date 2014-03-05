@@ -39,4 +39,25 @@
   {% endif %}
 {% endif %}
 
+{% if groups %}
+<h1>Leaderboard</h1>
+
+<div class="table-responsive">
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th>Group</th>
+      </tr>
+    </thead>
+    <tbody>
+{% for group in groups %}
+      <tr>
+        <td>{{ group.pk }}</td>
+      </tr>
+{% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endif %}
+
 {% endblock %}

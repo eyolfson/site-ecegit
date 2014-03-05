@@ -13,7 +13,8 @@ from ece459.utils import gitolite_creator_call, is_ece459_student
 def assignment(request, slug):
     a = get_object_or_404(Assignment, slug=slug)
     username = request.user.username
-    c = {'is_student': is_ece459_student(username)}
+    c = {'is_student': is_ece459_student(username),
+         'groups': Group.objects.filter(assignment=a)}
     if c['is_student']:
         try:
             g = request.user.ece459_groups.get(assignment=a)
