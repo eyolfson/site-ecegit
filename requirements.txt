@@ -1,3 +1,4 @@
 Django==1.6.2
 django-gitolite==0.0.5
 django-ssh==0.0.3
+pyinotify==0.9.4

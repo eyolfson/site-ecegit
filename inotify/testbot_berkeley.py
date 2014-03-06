@@ -102,6 +102,7 @@ def process(path):
         if not message and abs(d - distance) > 0.1:
             message = "Tour distance doesn't match"
         if not message:
+            valid = True
             message = "{} iterations, {} distance".format(iterations, distance)
     with open(result_path, 'w') as f:
         f.write('{}\n'.format(repo))
