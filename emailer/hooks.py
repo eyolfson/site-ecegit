@@ -5,7 +5,7 @@ from emailer.models import Notification
 logger = logging.getLogger('emailer')
 
 def email(push):
-    notifications = Notfication.objects.filter(repo=push.repo)
+    notifications = Notification.objects.filter(repo=push.repo)
     notifications = notifications.exclude(user=push.user)
     if notifications.count() == 0:
         return
