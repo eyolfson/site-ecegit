@@ -26,6 +26,7 @@ INSTALLED_APPS = (
     'django_gitolite',
     'django_ssh',
     'ece459',
+    'emailer',
 )
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
