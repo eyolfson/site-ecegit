@@ -36,10 +36,20 @@
   <dt>Repository</dt>
   <dd>{{ group.repo }}</dd>
 </dl>
+
+    {% if testbot_messages %}
+<h2>Testbot Messages</h2>
+
+<ul class="list-group">
+      {% for message in testbot_messages %}
+  <li class="list-group-item">{{ message }}</li>
+      {% endfor %}
+</ul>
+    {% endif %}
   {% endif %}
 {% endif %}
 
-{% if groups %}
+{% if tsp_results %}
 <h1>Leaderboard</h1>
 
 <div class="table-responsive">
@@ -47,12 +57,16 @@
     <thead>
       <tr>
         <th>Group</th>
+        <th>Iterations</th>
+        <th>Distance</th>
       </tr>
     </thead>
     <tbody>
-{% for group in groups %}
+{% for result in tsp_results %}
       <tr>
-        <td>{{ group.pk }}</td>
+        <td>{{ result.group.pk }}</td>
+        <td>{{ result.iterations }}</td>
+        <td>{{ result.distance }}</td>
       </tr>
 {% endfor %}
     </tbody>

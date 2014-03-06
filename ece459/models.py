@@ -15,6 +15,25 @@ class Group(models.Model):
     members = models.ManyToManyField(User, related_name='ece459_groups')
     repo = models.ForeignKey(Repo, blank=True, null=True)
 
+class TestbotMessage(models.Model):
+    group = models.ForeignKey(Group, related_name='testbot_messages')
+    message = models.TextField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.message
+
+    class Meta:
+        ordering = ['-timestamp']
+
+class TSPResult(models.Model):
+    group = models.OneToOneField(Group, related_name='tsp_result')
+    iterations = models.IntegerField()
+    distance = models.FloatField()
+
+    class Meta:
+        ordering = ['-iterations', 'distance']
+
 # Signals
 post_save.connect(receive_key_create, Key)
 pre_delete.connect(receive_key_delete, Key)
