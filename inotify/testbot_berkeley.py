@@ -6,7 +6,7 @@ import subprocess
 from functools import partial
 
 COMMENT_PATTERN = re.compile('COMMENT: (\d+) iterations, (\d+) distance')
-CLONE_URI = 'localhost'
+CLONE_URI = 'git@ecegit.uwaterloo.ca'
 HOME_DIR = os.environ['HOME']
 SOLVER_FILE = 'solver.cpp'
 TSP_FILE = 'berlin52.tsp'
