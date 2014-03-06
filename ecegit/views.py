@@ -6,9 +6,11 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
 
-from django_gitolite.models import Access
+from django_gitolite.models import Access, Repo
 from django_ssh.forms import KeyForm
 from django_ssh.models import Key
+
+from emailer.models import Notification
 
 def home(request):
     context = {'accesses': []}
@@ -29,7 +31,9 @@ def profile(request):
     else:
         key_form = KeyForm(request.user)
     keys = Key.objects.filter(user=request.user)
-    return render(request, 'profile.html', {'keys': keys, 'key_form': key_form})
+    notifications = Notification.objects.filter(user=request.user)
+    return render(request, 'profile.html', {'keys': keys, 'key_form': key_form,
+                                            'notifications': notifications})
 
 @login_required
 def profile_remove(request, key_id):
@@ -39,3 +43,24 @@ def profile_remove(request, key_id):
     except Key.DoesNotExist:
         pass
     return redirect('profile')
+
+@login_required
+def subscribe(request, repo_id):
+    user = request.user
+    try:
+        repo = Repo.objects.get(pk=repo_id)
+        Access.objects.get(repo=repo, user=user)
+        Notification.objects.create(repo=repo, user=user)
+    except:
+        pass
+    return redirect('home')
+
+@login_required
+def unsubscribe(request, repo_id):
+    try:
+        repo = Repo.objects.get(pk=repo_id)
+        n = Notification.objects.get(repo=repo, user=request.user)
+        n.delete()
+    except:
+        pass
+    return redirect('home')

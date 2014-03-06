@@ -50,4 +50,26 @@
     </form>
   </div>
 </div>
+
+{% if notifications %}
+<h2>Notifications</h2>
+<div class="table-responsive">
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th>Path</th>
+        <th><span class="glyphicon glyphicon-wrench"></span></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for notification in notifications %}
+      <tr>
+        <td>{{ notification.repo.path }}</td>
+        <td><a href="{% url 'unsubscribe' notification.repo.pk %}"><span class="glyphicon glyphicon-remove text-danger"></span></a></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endif %}
 {% endblock %}
