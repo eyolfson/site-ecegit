@@ -53,7 +53,7 @@ def subscribe(request, repo_id):
         Notification.objects.create(repo=repo, user=user)
     except:
         pass
-    return redirect('home')
+    return redirect('profile')
 
 @login_required
 def unsubscribe(request, repo_id):
@@ -63,4 +63,4 @@ def unsubscribe(request, repo_id):
         n.delete()
     except:
         pass
-    return redirect('home')
+    return redirect('profile')
