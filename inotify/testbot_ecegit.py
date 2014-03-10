@@ -30,14 +30,10 @@ def process(path):
     print('Finish', path)
 
 if __name__ == "__main__":
-    import pyinotify
-    class EventHandler(pyinotify.ProcessEvent):
-        def process_IN_CLOSE_WRITE(self, event):
-            process(event.pathname)
-    wm = pyinotify.WatchManager()
-    handler = EventHandler()
-    notifier = pyinotify.Notifier(wm, handler)
-    mask = pyinotify.IN_CLOSE_WRITE
-    directory = os.path.join(HOME_DIR, 'testbot', 'results')
-    wm.add_watch(directory, mask, rec=True)
-    notifier.loop()
+    from time import sleep
+    while True:
+        dir = '/srv/git/testbot/results'
+        for basename in os.listdir(dir):
+           path = os.path.join(dir, basename)
+           process(path)
+        sleep(1)
