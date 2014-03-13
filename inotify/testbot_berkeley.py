@@ -13,6 +13,9 @@ TSP_FILE = 'berlin52.tsp'
 TOUR_FILE = 'berlin52.tour'
 TOUR_LEN = 52
 
+class TourException(Exception):
+    pass
+
 def compute_distances():
     coord = {}
     with open(os.path.join(HOME_DIR, TSP_FILE), 'r') as f:
@@ -57,53 +60,52 @@ def run(repo):
     c('bin/solver {} -s 10'.format(TSP_FILE))
     return os.path.join(repo_dir, TOUR_FILE)
 
+def validate_tour(path):
+    tour = []
+    matched = False
+    with open(path, 'r') as f:
+        for line in f:
+            if not matched:
+                m = COMMENT_PATTERN.match(line)
+                if m:
+                    iterations = int(m.group(1))
+                    distance = int(m.group(2))
+                    matched = True
+            s = line.strip()
+            if s.isdigit():
+                i = int(s)
+                if i in tour:
+                    raise TourException('Tour has duplicate city')
+                tour.append(i)
+    if not matched:
+        raise TourException("Tour COMMENT doesn't exist")
+    if len(tour) != TOUR_LEN:
+        raise TourException("Tour number of cities doesn't match")
+    d = 0.0
+    for i in range(1, len(tour)):
+        d += DISTANCES[(tour[i], tour[i-1])]
+    d += DISTANCES[(tour[0], tour[-1])]
+    if abs(d - distance) > 0.1:
+        raise TourException("Tour distance doesn't match")
+    return (iterations, distance)
+
 def process(path):
     print('Start', path)
     basename = os.path.basename(path)
     result_path = os.path.join(HOME_DIR, 'results', basename)
-    tour_path = None
-    message = None
-    iterations = None
-    distance = None
     valid = False
     with open(path, 'r') as f:
         for line in f:
             repo = line.strip()
     try:
         tour_path = run(repo)
+        iterations, distance = validate_tour(tour_path)
+        message = "{} iterations, {} distance".format(iterations, distance)
+        valid = True
     except subprocess.CalledProcessError as e:
         message = 'Command "{}" failed'.format(e.cmd)
-    if tour_path:        
-        tour = []
-        duplicate = False
-        with open(tour_path, 'r') as f:
-            for line in f:
-                if not iterations:
-                    m = COMMENT_PATTERN.match(line)
-                    if m:
-                        iterations = int(m.group(1))
-                        distance = int(m.group(2))
-                s = line.strip()
-                if s.isdigit():
-                    i = int(s)
-                    if i in tour:
-                        duplicate = True
-                    tour.append(i)
-        if not iterations or not distance:
-            message = "Tour COMMENT doesn't exist"
-        if not message and duplicate:
-            message = "Tour has duplicate city"
-        if not message and len(tour) != TOUR_LEN:
-            message = "Tour number of cities doesn't match"
-        d = 0.0
-        for i in range(1, len(tour)):
-            d += DISTANCES[(tour[i], tour[i-1])]
-        d += DISTANCES[(tour[0], tour[-1])]
-        if not message and abs(d - distance) > 0.1:
-            message = "Tour distance doesn't match"
-        if not message:
-            valid = True
-            message = "{} iterations, {} distance".format(iterations, distance)
+    except TourException as e:
+        message = str(e)
     with open(result_path, 'w') as f:
         f.write('{}\n'.format(repo))
         f.write('{}\n'.format(message))
