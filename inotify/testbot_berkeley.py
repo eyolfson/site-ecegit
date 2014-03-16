@@ -40,7 +40,7 @@ DISTANCES = compute_distances()
 def call(cwd, command):
     subprocess.check_call(command, cwd=cwd, shell=True,
                           stdout=subprocess.DEVNULL,
-                          stderr=subprocess.STDOUT
+                          stderr=subprocess.STDOUT,
                           timeout=15)
 
 def run(repo):
