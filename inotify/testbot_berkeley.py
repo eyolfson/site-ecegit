@@ -40,7 +40,8 @@ DISTANCES = compute_distances()
 def call(cwd, command):
     subprocess.check_call(command, cwd=cwd, shell=True,
                           stdout=subprocess.DEVNULL,
-                          stderr=subprocess.STDOUT)
+                          stderr=subprocess.STDOUT
+                          timeout=15)
 
 def run(repo):
     repo_dir = os.path.join(HOME_DIR, repo.rsplit('/')[-1])
@@ -104,6 +105,8 @@ def process(path):
         valid = True
     except subprocess.CalledProcessError as e:
         message = 'Command "{}" failed'.format(e.cmd)
+    except subprocess.TimeoutExpired as e:
+        message = 'Command "{}" timed out'.format(e.cmd)
     except TourException as e:
         message = str(e)
     with open(result_path, 'w') as f:
