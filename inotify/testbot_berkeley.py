@@ -102,7 +102,13 @@ def process(path):
     try:
         tour_path = run(repo)
         iterations, distance = validate_tour(tour_path)
-        message = "{} iterations, {} distance".format(iterations, distance)
+        repo_dir = os.path.join(HOME_DIR, repo.rsplit('/')[-1])
+        git_output = subprocess.check_output('git rev-parse --short HEAD',
+                                             shell=True, cwd=repo_dir,
+                                             universal_newlines=True)
+        message = "[{}] {} iterations, {} distance".format(git_output.strip(),
+                                                           iterations,
+                                                           distance)
         valid = True
     except subprocess.CalledProcessError as e:
         message = 'Command "{}" failed'.format(e.cmd)
