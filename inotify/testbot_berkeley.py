@@ -52,6 +52,7 @@ def run(repo):
     c = partial(call, repo_dir)
     if not created:
         c('git reset --hard HEAD')
+        c('git clean -fxd')
         c('git pull')
     c('rm -f {}'.format(SOLVER_FILE))
     c('make clean')
