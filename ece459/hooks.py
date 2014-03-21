@@ -9,6 +9,8 @@ def testbot(push):
         group = Group.objects.get(repo=push.repo, assignment__slug='a3')
     except Group.DoesNotExist:
         return
+    if push.refname != 'refs/heads/master':
+        return
     try:
         filename = os.path.join(home_dir(), 'testbot', 'queue', str(push.pk))
         with open(filename, 'w') as f:
