@@ -88,5 +88,5 @@ FILE_UPLOAD_HANDLERS = (
 # Gitolite
 GITOLITE_USER = 'git'
 GITOLITE_HOOKS = (
-    'emailer.hooks.email'
+    'emailer.hooks.email',
 )
