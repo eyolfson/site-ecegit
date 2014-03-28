@@ -88,6 +88,5 @@ FILE_UPLOAD_HANDLERS = (
 # Gitolite
 GITOLITE_USER = 'git'
 GITOLITE_HOOKS = (
-    'ece459.hooks.testbot',
     'emailer.hooks.email'
 )
