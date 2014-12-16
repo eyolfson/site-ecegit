@@ -25,7 +25,6 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django_gitolite',
     'django_ssh',
-    'ece459',
     'emailer',
 )
 MIDDLEWARE_CLASSES = (
