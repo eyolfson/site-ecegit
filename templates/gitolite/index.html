@@ -5,8 +5,8 @@
 
 <p>This is a Git server at the University of Waterloo.</p>
 
-{% if accesses %}
-<h2>Accesses</h2>
+{% if repos %}
+<h2>Repos</h2>
 
 <div class="table-responsive">
   <table class="table table-hover">
@@ -16,9 +16,9 @@
       </tr>
     </thead>
     <tbody>
-      {% for access in accesses %}
+      {% for repo in repos %}
       <tr>
-        <td><a href="{{ access.repo.get_absolute_url }}">{{ access.repo }}</a></td>
+        <td><a href="{{ repo.get_absolute_url }}">{{ repo }}</a></td>
       </tr>
       {% endfor %}
     </tbody>

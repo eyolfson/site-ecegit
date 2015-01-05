@@ -10,7 +10,9 @@ A university site for code and course management built on the Django framework
    `source venv/bin/activate`
 3. Install the requirements using `pip install -r requirements.txt`
 4. Initialize the database with `python manage.py migrate`
-5. Start the server with `python manage.py runserver`
+5. Initialize gitolite with `gitolite setup -a USERNAME` and follow the
+   `django-gitolite` instructions
+6. Start the server with `python manage.py runserver`
 
 ## CAS
 

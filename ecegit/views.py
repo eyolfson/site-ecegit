@@ -22,29 +22,6 @@ def setup(request):
     return render(request, 'setup.html')
 
 @login_required
-def profile(request):
-    if request.method == 'POST':
-        key_form = KeyForm(request.user, request.POST, request.FILES)
-        if key_form.is_valid():
-            key_form.create()
-            return redirect('profile')
-    else:
-        key_form = KeyForm(request.user)
-    keys = Key.objects.filter(user=request.user)
-    notifications = Notification.objects.filter(user=request.user)
-    return render(request, 'profile.html', {'keys': keys, 'key_form': key_form,
-                                            'notifications': notifications})
-
-@login_required
-def profile_remove(request, key_id):
-    try:
-        key = Key.objects.get(pk=key_id, user=request.user)
-        key.delete()
-    except Key.DoesNotExist:
-        pass
-    return redirect('profile')
-
-@login_required
 def subscribe(request, repo_id):
     user = request.user
     try:
