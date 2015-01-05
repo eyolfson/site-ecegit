@@ -27,6 +27,7 @@ INSTALLED_APPS = (
     'django_gitolite',
     'django_gitolite_repositories',
     'emailer',
+    'courses',
 )
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
