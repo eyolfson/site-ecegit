@@ -4,6 +4,7 @@
 # this program. If not, see <http://www.gnu.org/licenses/>.
 
 from django.conf.urls import patterns, include, url
+from django.contrib import admin
 
 urlpatterns = patterns('',
     url(r'^$', 'ecegit.views.home', name='home'),
@@ -16,4 +17,5 @@ urlpatterns = patterns('',
         name='subscribe'),
     url(r'^unsubscribe/(?P<repo_id>\d+)/$', 'ecegit.views.unsubscribe',
         name='unsubscribe'),
+    url(r'^admin/', include(admin.site.urls)),
 )
