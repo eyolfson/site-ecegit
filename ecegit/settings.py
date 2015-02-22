@@ -29,6 +29,7 @@ INSTALLED_APPS = (
     'django_gitolite_repositories',
     'emailer',
     'courses',
+    'ece459_1151',
 )
 TEMPLATE_CONTEXT_PROCESSORS = (
     'django.contrib.messages.context_processors.messages',

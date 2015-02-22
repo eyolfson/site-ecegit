@@ -18,4 +18,5 @@ urlpatterns = patterns('',
     url(r'^unsubscribe/(?P<repo_id>\d+)/$', 'ecegit.views.unsubscribe',
         name='unsubscribe'),
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^ece459/1151/', include('ece459_1151.urls', namespace='ece459_1151')),
 )
