@@ -4,8 +4,6 @@ from django.db import models
 from django_gitolite.models import Repo
 from django_ssh.models import Key
 
-from ece459_1151.utils import receive_key_create, receive_key_delete
-
 class Assignment(models.Model):
     slug = models.SlugField()
 

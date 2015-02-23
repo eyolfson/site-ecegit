@@ -11,7 +11,7 @@
 {% endif %}
 
 <p>
-  <form class="form-inline" role="form" action="{% url 'ece459:assignment' 'a3' %}" method="post">
+  <form class="form-inline" role="form" action="{% url 'ece459_1151:assignment' 'a3' %}" method="post">
     {% csrf_token %}
     <div class="form-group">
       <label class="sr-only" for="username">Username</label>
@@ -22,7 +22,7 @@
 </p>
 <hr />
 <p>
-  <form role="form" action="{% url 'ece459:assignment' 'a3' %}" method="post" name="solo">
+  <form role="form" action="{% url 'ece459_1151:assignment' 'a3' %}" method="post" name="solo">
     {% csrf_token %}
     <button class="btn btn-default" type="submit" name="solo">Solo</button>
   </form>
@@ -49,9 +49,9 @@
   {% endif %}
 {% endif %}
 
-{% if tsp_results %}
 <h1>Leaderboard</h1>
 
+{% if tsp_results %}
 <div class="table-responsive">
   <table class="table table-hover">
     <thead>
@@ -72,6 +72,8 @@
     </tbody>
   </table>
 </div>
+{% else %}
+<p>Not enabled yet.</p>
 {% endif %}
 
 {% endblock %}

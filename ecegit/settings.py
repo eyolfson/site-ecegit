@@ -26,7 +26,6 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django_ssh',
     'django_gitolite',
-    'django_gitolite_repositories',
     'emailer',
     'courses',
     'ece459_1151',

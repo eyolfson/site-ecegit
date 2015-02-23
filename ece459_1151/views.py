@@ -25,7 +25,7 @@ def assignment(request, slug):
 
     if request.method == "POST":
         if not c['is_student'] or c['group']:
-            return redirect('ece459:assignment', 'a3')
+            return redirect('ece459_1151:assignment', 'a3')
         if 'partner' in request.POST:
             try:
                 partner = User.objects.get(username=request.POST['username'])
@@ -57,7 +57,7 @@ def assignment(request, slug):
                 g.save()
             except Repo.DoesNotExist:
                 pass
-            return redirect('ece459:assignment', 'a3')
+            return redirect('ece459_1151:assignment', 'a3')
         elif 'solo' in request.POST:
             g = Group.objects.create(assignment=a)
             g.members.add(request.user)
@@ -70,6 +70,6 @@ def assignment(request, slug):
                 g.save()
             except Repo.DoesNotExist:
                 pass
-            return redirect('ece459:assignment', 'a3')
+            return redirect('ece459_1151:assignment', 'a3')
 
-    return render(request, 'ece459/assignment.html', c)
+    return render(request, 'ece459_1151/assignment.html', c)
