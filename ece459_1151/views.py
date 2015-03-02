@@ -51,6 +51,8 @@ def assignment(request, slug):
             gitolite_creator_call('fork ece459/1151/a3 {}'.format(r))
             gitolite_creator_call('perms {} + WRITERS {}'.format(r, username))
             gitolite_creator_call('perms {} + WRITERS {}'.format(r, partner.username))
+            gitolite_creator_call('perms {} + WRITERS @ece459-1151-staff'.format(r))
+            gitolite_creator_call('perms {} + READERS ece459@costa.cs.uwaterloo.ca'.format(r))
             try:
                 repo = Repo.objects.get(path=r)
                 g.repo = repo
@@ -64,6 +66,8 @@ def assignment(request, slug):
             r = 'ece459/1151/a3/g{}'.format(str(g.pk))
             gitolite_creator_call('fork ece459/1151/a3 {}'.format(r))
             gitolite_creator_call('perms {} + WRITERS {}'.format(r, username))
+            gitolite_creator_call('perms {} + WRITERS @ece459-1151-staff'.format(r))
+            gitolite_creator_call('perms {} + READERS ece459@costa.cs.uwaterloo.ca'.format(r))
             try:
                 repo = Repo.objects.get(path=r)
                 g.repo = repo
