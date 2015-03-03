@@ -4,7 +4,7 @@ from subprocess import call
 
 from django_gitolite.utils import home_dir
 
-from ece459.models import Group
+from ece459_1151.models import Group
 
 def testbot(push):
     try:
