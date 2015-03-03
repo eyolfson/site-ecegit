@@ -32,7 +32,7 @@ def process(path):
 if __name__ == "__main__":
     from time import sleep
     while True:
-        dir = '/srv/git/testbot/results'
+        dir = '/home/ece459/results'
         for basename in os.listdir(dir):
            path = os.path.join(dir, basename)
            process(path)
