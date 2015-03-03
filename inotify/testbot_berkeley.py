@@ -124,6 +124,9 @@ def process(path):
             f.write('{}\n'.format(distance))
     print('Finish', path)
     os.remove(path)
+    rc = subprocess.call(['scp', result_path, 'ece459@ecgit.uwaterloo.ca:result'])
+    if rc == 0:
+        os.remove(result_path)
 
 if __name__ == "__main__":
     import pyinotify
