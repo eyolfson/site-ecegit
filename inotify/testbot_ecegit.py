@@ -1,5 +1,8 @@
 import os
 
+import django
+django.setup()
+
 from ece459_1151.models import Group, TestbotMessage, TSPResult
 
 HOME_DIR = os.environ['HOME']
