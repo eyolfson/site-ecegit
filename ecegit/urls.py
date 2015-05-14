@@ -9,6 +9,7 @@ from django.contrib import admin
 urlpatterns = patterns('',
     url(r'^$', 'ecegit.views.home', name='home'),
     url(r'^setup/$', 'ecegit.views.setup', name='setup'),
+    url(r'^commits_csv/$', 'ecegit.views.commits_csv', name='commits_csv'),
     url(r'^profile/', include('django_ssh.urls', namespace='ssh')),
     url(r'^repo/', include('django_gitolite.urls', namespace='git')),
     url(r'^login/$', 'django_cas.views.login', name='login'),

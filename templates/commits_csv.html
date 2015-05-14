@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}Setup{% endblock %}
+
+{% block nav-setup %} class="active"{% endblock %}
+
+{% block content %}
+<h1>Commits CSV</h1>
+
+<form action="{% url 'commits_csv' %}" method="post">
+    {% csrf_token %}
+    {{ form }}
+    <button type="submit" class="btn btn-default">Submit</button>
+</form>
+{% endblock %}
