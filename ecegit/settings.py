@@ -29,6 +29,7 @@ INSTALLED_APPS = (
     'emailer',
     'courses',
     'ece459_1151',
+    'django_ece459_1161',
 )
 TEMPLATE_CONTEXT_PROCESSORS = (
     'django.contrib.messages.context_processors.messages',
