@@ -42,10 +42,10 @@ def commits_csv(request):
             response['Content-Disposition'] = 'attachment; filename="commits.csv"'
             writer = csv.writer(response)
 
-            students = [x.decode() for x in check_output(['gitolite', 'list-members', '@ece351-1155-students']).splitlines()]
+            students = [x.decode() for x in check_output(['gitolite', 'list-members', '@ece351-1161-students']).splitlines()]
             for student in students:
                 pushes = Push.objects.filter(user__username=student,
-                                 repo__path='ece351/1155/{}/labs'.format(student),
+                                 repo__path='ece351/1161/{}/labs'.format(student),
                                  time__lte=timestamp, refname='refs/heads/master').order_by('-time')
                 if pushes.count() > 0:
                     rev = pushes[0].new_rev
