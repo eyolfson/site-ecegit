@@ -1,0 +1,94 @@
+#!/usr/bin/env python
+#
+# Copyright 2016 Jonathan Eyolfson
+#
+# This program is free software: you can redistribute it and/or modify it under
+# the terms of the GNU Affero General Public License as published by the Free
+# Software Foundation, either version 3 of the License, or (at your option) any
+# later version.
+#
+# This program is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more
+# details.
+#
+# You should have received a copy of the GNU Affero General Public License along
+# with this program. If not, see <http://www.gnu.org/licenses/>.
+
+import os
+import pwd
+import subprocess
+import time
+
+CONTROLLER_USERNAME = 'ecegitcontroller'
+
+def file_content(path):
+    with open(path, 'r') as f:
+        content = f.read()
+    return content
+
+def collect_ssh_keys(keydir):
+    ssh_keys = {}
+    for keybase in os.listdir(keydir):
+        username = keybase.split('@')[0]
+        path = os.path.join(keydir, keybase)
+        ssh_key = file_content(path)
+        if not username in ssh_keys:
+            ssh_keys[username] = [ssh_key]
+        else:
+            ssh_keys[username].append(ssh_key)
+    return ssh_keys
+
+def get_authorized_keys_path(username):
+    pw = pwd.getpwnam(username)
+    return os.path.join(pw.pw_dir, '.ssh', 'authorized_keys')
+
+def is_unix_user(username):
+    is_user = True
+    try:
+        pwd.getpwnam(username)
+    except KeyError:
+        is_user = False
+    return is_user
+
+def create_unix_user(username):
+    print("Creating user '{}'".format(username))
+    subprocess.run(['sudo', 'useradd', '-m', '-g', CONTROLLER_USERNAME,
+                    '-s', '/bin/bash', username], check=True)
+
+def create_home_dir_layout(username):
+    pw = pwd.getpwnam(username)
+    subprocess.run(['sudo', 'chmod', '750', pw.pw_dir], check=True)
+
+    sshdir = os.path.join(pw.pw_dir, '.ssh')
+    subprocess.run(['sudo', '-u', username, 'mkdir', sshdir], check=True)
+    subprocess.run(['sudo', 'chmod', '770', sshdir], check=True)
+
+    authorized_keys_path = get_authorized_keys_path(username)
+    subprocess.run(['touch', authorized_keys_path], check=True)
+
+def sync_unix_users(usernames):
+    for username in usernames:
+        if not is_unix_user(username):
+            create_unix_user(username)
+            create_home_dir_layout(username)
+
+def sync_ssh_keys(ssh_keys):
+    for username, keys in ssh_keys.items():
+        authorized_keys_path = get_authorized_keys_path(username)
+        with open(authorized_keys_path, 'w') as f:
+            f.writelines(keys)
+    
+def watch(keydir):
+    while True:
+        ssh_keys = collect_ssh_keys(keydir)
+        sync_unix_users(ssh_keys.keys())
+        sync_ssh_keys(ssh_keys)
+        time.sleep(5)
+
+if __name__ == "__main__":
+    import argparse
+    parser = argparse.ArgumentParser(description='Keydir synchronization.')
+    parser.add_argument('keydir', help='A directory with SSH keys')
+    args = parser.parse_args()
+    watch(args.keydir)
