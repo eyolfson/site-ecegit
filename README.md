@@ -22,4 +22,4 @@ This code is licensed under an MIT license. It is currently up-to-date with
 
 ## License
 
-Except where noted, all code is licensed under GPL v3.
+Except where noted, all code is licensed under AGPLv3+.
