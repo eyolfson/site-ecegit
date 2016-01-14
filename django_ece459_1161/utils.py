@@ -29,9 +29,9 @@ def receive_key_create(sender, instance, **kwargs):
     path = key_abspath(instance)
     try:
         subprocess.check_call(['scp', path,
-            'ecegitcontroller@ece459-1.uwaterloo.ca:keydir-1161/'], check=True)
-    except:
-        msg = "key with path '{}' not created"
+            'ecegitcontroller@ece459-1.uwaterloo.ca:keydir-1161/'])
+    except subprocess.CalledProcessError as e:
+        msg = "key with path '{}' not scp'ed"
         logger.error(msg.format(path))
 
 def receive_key_delete(sender, instance, **kwawgs):
@@ -41,8 +41,7 @@ def receive_key_delete(sender, instance, **kwawgs):
     try:
         keybase = os.path.basename(path)
         subprocess.check_call(['ssh', 'rm',
-            'ecegitcontroller@ece459-1.uwaterloo.ca:keydir-1161/{}'.format(keybase)],
-        check=True)
+            'ecegitcontroller@ece459-1.uwaterloo.ca:keydir-1161/{}'.format(keybase)])
     except:
         msg = "key with path '{}' not deleted"
         logger.error(msg.format(path))
