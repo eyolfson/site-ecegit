@@ -4,7 +4,7 @@ import subprocess
 
 from django.contrib.auth.models import User
 
-from django_gitolite.utils import home_dir
+from django_gitolite.utils import key_abspath
 from django_ssh.models import Key
 
 GITOLITE_STUDENT_GROUP = '@ece459-1161-students'
@@ -23,18 +23,13 @@ def is_student(username):
 def is_student_key(key):
     return is_student(key.user.username)
 
-def key_abspath(key):
-    filename = '{}@django-{}.pub'.format(key.user.username, key.pk)
-    return os.path.join(home_dir(), 'ece459-1-keydir', filename)
-
 def receive_key_create(sender, instance, **kwargs):
     if not is_student_key(instance):
         return
     path = key_abspath(instance)
     try:
-        with open(path, 'w') as f:
-            f.write(instance.data)
-            f.write('\n')
+        subprocess.check_call(['scp', path,
+            'ecegitcontroller@ece459-1.uwaterloo.ca:keydir-1161/'], check=True)
     except:
         msg = "key with path '{}' not created"
         logger.error(msg.format(path))
@@ -44,7 +39,10 @@ def receive_key_delete(sender, instance, **kwawgs):
         return
     path = key_abspath(instance)
     try:
-        os.remove(path)
+        keybase = os.path.basename(path)
+        subprocess.check_call(['ssh', 'rm',
+            'ecegitcontroller@ece459-1.uwaterloo.ca:keydir-1161/{}'.format(keybase)],
+        check=True)
     except:
         msg = "key with path '{}' not deleted"
         logger.error(msg.format(path))
