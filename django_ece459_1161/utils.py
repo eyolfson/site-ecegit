@@ -13,8 +13,12 @@ logger = logging.getLogger('ece459_1161')
 
 def is_student(username):
     command = ['gitolite', 'list-memberships', '-u', username]
-    o = subprocess.check_output(command, stderr=subprocess.DEVNULL,
-                                universal_newlines=True)
+    try:
+        o = subprocess.check_output(command, stderr=subprocess.DEVNULL,
+                                    universal_newlines=True)
+    except Exception as e:
+        logger.error("gitolite command failed")
+        return False
     for l in o.splitlines():
         if l == GITOLITE_STUDENT_GROUP:
             return True
