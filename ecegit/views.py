@@ -34,7 +34,9 @@ def setup(request):
 
 @login_required
 def commits_csv(request):
-    if not request.user.username in ['jeyolfso', 'drayside', 'a3zaman']:
+    if not request.user.username in ['jeyolfso', 'drayside', 'a3zaman',
+                                     'rbabaeec', 'j4bian', 'dhshin',
+                                     'talguind']:
         return HttpResponseForbidden()
 
     from .forms import CommitTimeForm
@@ -42,6 +44,7 @@ def commits_csv(request):
     if request.method == 'POST':
         form = CommitTimeForm(request.POST)
         if form.is_valid():
+            term = str(form.cleaned_data['term'])
             timestamp = form.cleaned_data['timestamp']
             # timestamp = timezone('US/Eastern').localize(form.cleaned_data['timestamp'])
             import csv
@@ -52,10 +55,12 @@ def commits_csv(request):
             response['Content-Disposition'] = 'attachment; filename="commits.csv"'
             writer = csv.writer(response)
 
-            students = [x.decode() for x in check_output(['gitolite', 'list-members', '@ece351-1161-students']).splitlines()]
+            students_group = '@ece351-{}-students'.format(term)
+            students = [x.decode() for x in check_output(['gitolite', 'list-members', students_group]).splitlines()]
             for student in students:
+                student_repo_path = 'ece351/{}/{}/labs'.format(term, student)
                 pushes = Push.objects.filter(user__username=student,
-                                 repo__path='ece351/1161/{}/labs'.format(student),
+                                 repo__path=student_repo_path,
                                  time__lte=timestamp, refname='refs/heads/master').order_by('-time')
                 if pushes.count() > 0:
                     rev = pushes[0].new_rev
