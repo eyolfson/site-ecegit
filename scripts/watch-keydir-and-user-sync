@@ -53,11 +53,13 @@ def is_unix_user(username):
 
 def create_unix_user(username):
     print("Creating user '{}'".format(username))
-    subprocess.run(['sudo', 'useradd', '-m', '-g', CONTROLLER_USERNAME,
+    subprocess.run(['sudo', 'useradd', '-m',
                     '-s', '/bin/bash', username], check=True)
 
 def create_home_dir_layout(username):
     pw = pwd.getpwnam(username)
+    subprocess.run(['sudo', 'chown', ':{}'.format(CONTROLLER_USERNAME),
+                    pw.pw_dir], check=True)
     subprocess.run(['sudo', 'chmod', '750', pw.pw_dir], check=True)
 
     sshdir = os.path.join(pw.pw_dir, '.ssh')
